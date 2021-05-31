@@ -27,7 +27,6 @@
 }
 
 \bibliography{biblio} 
-
 \definecolor{pbfilling}{HTML}{ffffff}% filling color for the progress bar
 %\definecolor{pbfilling}{HTML}{aaaaaa}% background color for the progress bar
 \definecolor{pbbackground}{rgb}{0.36, 0.54, 0.66}
@@ -91,105 +90,221 @@
   \end{center}
 }
 
-\section{Introduction}
-
-\begin{frame}{Introduction}
-  \begin{block}{Field Based Coordination~\cite{Viroli-et-al:JLAMP-2019}}
-    A coordination model that leverages \lenf{computational fields} to orchestrate large scale systems.
-  \end{block}
-  \begin{block}{Aggregate Programming~\cite{IEEECIOT2015}}
-    A \lenf{top-down} and \lenf{global-to-local} approach 
-    to the specification of the collective adaptive behaviour of a distributed system.
-  
-  \end{block}
-    
-
+\section{It is all about composition \cite{}}
+\begin{frame}[fragile]{It is all about composition \cite{}}
+\begin{itemize}
+\item Humans tend to divide complex problem in multiple pieces
+\item Then, solve each piece
+\item Finally compose all solution to solve the initial problem
+\item Functional programming is a good way to compose solution :)
+\end{itemize}
 
 %\imgv{0.3}{collective-comm.png}
 
+\section{Lecture goals}
 \end{frame}
-\begin{frame}[fragile]{Aggregate Programming}
+\begin{frame}[fragile]{Lecture goals}
 \begin{itemize}
-  \item \lbl{Benefits}: 
-  \iz{
-    \item Abstract over technologies and network topologies
-    \item Describe behaviour in a functional and compositional manner
-    \item Proved to have, in certain circumstances, relevent properties such as \lenf{eventual consistency}~\cite{DBLP:conf/saso/BealVPD16} and \lenf{self-stabilisation}~\cite{DBLP:conf/saso/BealV14a}
-    \item Used in different scenario such as crowd management~\cite{IEEECIOT2015}, UAVs~\cite{DBLP:conf/coordination/CasadeiVAPD19} and Smart cities~\cite{casadei2019scc}
+\item Show an end-to-end \emph{functional} application
+\item Leverage some well-consolidated functional libraries
+\item Understand limitations (if any) and the improvements
+\end{itemize}
+\end{frame}
+
+\section{Target application}
+\begin{frame}[fragile]{Target application: Tic Tac Toe}
+\imgh{0.4}{tictactoe.png}
+\begin{center}
+  Repository: \url{https://github.com/cric96/scala-functional-gui}
+\end{center}
+\end{frame}
+
+\section{OOP Design}
+\begin{frame}[fragile]{OOP Design}
+\begin{block}{Everything is an object}
+  \begin{itemize}
+  \item Clean interface
+  \item State incapsulated
+  \item Side effect as methods call
+  \end{itemize}
+\end{block}
+
+\end{frame}
+
+\section{Model}
+\begin{frame}[fragile]{Model}
+\begin{block}{Core logic}
+  \begin{itemize}
+    \item Main data to describe model entities (e.g. players?)
+    \item Main methods to describe the game logic
+  \end{itemize}
+\end{block}
+\begin{lstlisting}[language=Java]
+/* two players (X, O)  */
+enum Player {
+    X, O, None; //Or? Optional?
+}
+/* a board 3x3 */
+interface TicTacToe {
+    Player get(int X, int Y);
+    TicTacToe (or void??) update(int x, int y, Player p);
+    boolean isOver;
+    Player getTurn;
+}
+\end{lstlisting}
+\end{frame}
+
+\section{View}
+\begin{frame}[fragile]{View}
+\begin{block}{Representation and IO boundary}
+  \begin{itemize}
+    \item Describe what type of data can consume (for rendering porpuse)
+    \item Catch how to handle user input
+    \item Ideally, View could be totaly decoupled from the model
+  \end{itemize}
+\end{block}
+\begin{lstlisting}[language=Java]
+
+//a la' view model
+interface ViewBoard {
+    List<String> getRow(int row);
+    List<List<String>> getAllBoard();
+}
+interface View extends ClickCellSource {
+    void render(ViewBoard board);
+    void winner(String player);
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{View}
+\begin{block}{Desing pattern}
+  \begin{itemize}
+    \item Input handler is usally solved with the Observer pattern (or also called Listener). 
+    \item When is possible, during the design process, is important to identify patterns and reuse common solution :D
+  \end{itemize}
+\end{block}
+\begin{lstlisting}[language=Java]
+public interface ClickCellSource {
+  void attach(Observer observer);
+  interface Observer {
+      void notify(int X, int Y);
   }
-  \item \lbl{Problem:} Hard to use
-  \iz{
-    \item High learning curve
-    \item Plethora of tools involved 
-    \item Need of simulations
-    \item Lack of tools for real-system monitoring
-  }
-\end{itemize}
-
+}
+\end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Starting point and inspiration}
-
-\begin{block}{Tool-chain}
+\section{Controller}
+\begin{frame}[fragile]{Controller}
+\begin{block}{Goals}
   \begin{itemize}
-  \item \lenf{ScaFi}~\cite{DBLP:conf/ecoop/CasadeiV16}: a modular Scala-based toolchain for aggregate programming comprising an inner-DSL, a simulator and actor-based platfrom
-  \item \lenf{Protelis}~\cite{ProtelisSAC14}: a Java-interoperable stand-alone DSL
-  \item \lenf{FCPP}~\cite{fcpp}: a lightweight native implementation
-  \end{itemize}
-\end{block}
-  
-\begin{block}{Playgrounds}
-
-\begin{itemize}
-\item \lenf{WebProto~\cite{DBLP:conf/saso/UsbeckB13}}: a pioneer no longer maintained playground for Proto
-\item \lenf{ScalaFiddle \& Scastie}: well-known Scala playgrounds
-\end{itemize}
-
-\end{block}
-\end{frame}
-
-\begin{frame}[fragile]{Goals}
-
-\begin{itemize}
-\item Reducing the learning time of \scafi{}
-\item Inject different aggregate programming languages
-\item Zero-install distribution
-\item Support also remote program execution
-\item Reuse as much as possible the \scafi{} codeline
-\end{itemize}
-  
-\end{frame}
-
-\section{Contribution}
-
-\begin{frame}[fragile]{Current Usage Scenario}
-
-\begin{block}{Learning and education}
-  \begin{itemize}
-  \item Exposing an environment with minimal requirements
-  \item Sequence of guided example
-  \item Simplified access to the simulated sensors and actuators
+    \item Coordinate the interation between the View and Model worlds
+    \item Handle concurrency
+    \item Adapt data 
   \end{itemize}
 \end{block}
 
-\begin{block}{Fast Prototyping}
+\begin{lstlisting}[language=Java]
+public interface Game extends ClickCellSource.Observer {
+  void start();
+}
+
+public class TicTacToeGame implements Game {
+  private final TicTacToe ticTacToe;
+  private final TicTacToeView ticTacToeView;
+
+  public static TicTacToeGame playWith(
+      final TicTacToe ticTacToe, 
+      final TicTacToeView ticTacToeView) {...}
+  ....
+
+\end{lstlisting}
+\end{frame}
+
+\section{Putting all togheter}
+\begin{frame}[fragile]{Putting all togheter}
+
+\begin{lstlisting}[language=Java]
+public static void main(String[] args) {
+  final TicTacToeView view = SwingView.createAndShow(800, 600);
+  final TicTacToe model = TicTacToeFactory.startX();
+  final Game game = TicTacToeGame.playWith(model, view);
+  game.start();
+}
+\end{lstlisting}
+\begin{block}{Clean enogh, isn't it?}
+  What do you think?
   \begin{itemize}
-  \item Aggregate programming require an iterative, incremental process of program refinement
-  \item Our approach supports this workflow proving a simulated enviroment with zero instalation overhead
+    \item What do you think?
+    \item Try to rethink using "functional" abstractions
+    \item (Monads? Functions? Algebric Data Type?)
+    \item Let's go to the "functional" side :)
   \end{itemize}
-  
 \end{block}
-
 \end{frame}
-
-\begin{frame}[fragile]{Demo}
-  \centering
-  \url{https://scafi.github.io/web/}
-\imgh{0.8}{scafi-web-large.png}
-
-\end{frame}
-  
 %%Todo
+
+\section{Libraries}
+\begin{frame}[fragile]{Libraries}
+
+\begin{block}{\href{https://typelevel.org/cats/}{Cats}}
+  provides abstractions for functional programming in the Scala programming language
+\end{block}
+
+\begin{block}{\href{https://monix.io/}{Monix}}
+  high-performance Scala / Scala.js library for composing asynchronous, event-based programs
+\end{block}
+
+\end{frame}
+%%Todo
+\section{Task}
+\begin{frame}[fragile]{Task}
+
+\begin{block}{Definition}
+  Task represents a specification for a possibly lazy or asynchronous computation, which when executed will produce an A as a result, along with possible side-effects.
+\end{block}
+\begin{lstlisting}[language=Scala]
+  trait Task[+A] {
+    final def flatMap[B](f: A => Task[B]): Task[B] = ...
+    final def map[B](f : A => B): Task[B] = ...
+    //some interesting extesions
+    def memoize: Task[A] = ...
+}
+object Task {
+    def pure[A](a : A) : Task[A]
+    def defer[A](a : Task[A]) : Task[A]
+}
+\end{lstlisting}
+\begin{center}
+  What does it refer you to?
+\end{center}
+
+\end{frame}
+
+\section{Task}
+\begin{frame}[fragile]{A Little task}
+
+\begin{lstlisting}[language=Scala]
+val scheduler = monix.execution.Scheduler.Implicits.global
+
+def someComputation(data : Long) : Task[Long] = 
+    Task.pure(data * 1000)
+
+def log(value : String) : Task[Unit] = Task { println(value) }
+
+val main = for {
+  data <- someComputation(4)
+  _ <- log(s"computations ends with value $data")
+} yield (data)
+
+main.runToFuture(scheduler)
+\end{lstlisting}
+\begin{center}
+  \href{https://scalafiddle.io/sf/C4Qon6a/1}{Fiddle}
+\end{center}
+
+\end{frame}
+
 \section{Conclusion \& Future Work}
 
 \begin{frame}{Conclusion}
