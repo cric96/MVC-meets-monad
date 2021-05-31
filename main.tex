@@ -89,7 +89,7 @@
   \end{center}
 }
 
-\section{It is all about composition \cite{milewski2019category}}
+\section{It is all about composition}
 \begin{frame}[fragile]{It is all about composition \cite{milewski2019category}}
 \begin{itemize}
 \item Humans tend to divide complex problem in multiple pieces
@@ -263,11 +263,11 @@ public static void main(String[] args) {
   Task represents a specification for a possibly lazy or asynchronous computation, which when executed will produce an A as a result, along with possible side-effects.
 \end{block}
 \begin{lstlisting}[language=Scala]
-  trait Task[+A] {
-    final def flatMap[B](f: A => Task[B]): Task[B] = ...
-    final def map[B](f : A => B): Task[B] = ...
-    //some interesting extesions
-    def memoize: Task[A] = ...
+trait Task[+A] {
+  final def flatMap[B](f: A => Task[B]): Task[B] = ...
+  final def map[B](f : A => B): Task[B] = ...
+  //some interesting extesions
+  def memoize: Task[A] = ...
 }
 object Task {
     def pure[A](a : A) : Task[A]
@@ -311,7 +311,7 @@ main.runToFuture(scheduler)
 A data type for modelling and processing asynchronous and reactive streaming of events with non-blocking back-pressure.
 \end{block}
 
-\begin{block}{Functional Reactive Programming}
+\begin{block}{Functional Reactive Programming \cite{wiki:functional} \cite{blackheath2016functional}}
   \begin{itemize}
     \item The program is expressed as a reaction to its inputs, or as a flow of data.
     \item We can use Observable to implement it
@@ -344,6 +344,230 @@ computation.foreachL(a => a).runToFuture
 \end{center}
 
 \end{frame}
+
+\section{MVC + Functional}
+\begin{frame}[fragile]{MVC + Functional, Intuition}
+\begin{itemize}
+  \item Model is described usign Algebric Data Type and operations (in a separeted module)
+  \item View is modelled using monadic abstraction to wrap side effects
+  \item Controller coordinates model and view without introducing other side effects and using a monadic manipulation (e.g. via flatmap)
+\end{itemize}
+
+
+\begin{block}{Applied in our case}
+\begin{itemize}
+  \item Observable describes the input user flow
+  \item All the other computation (lazy and with side effects) are wrapped with Task
+  \item Let's start again :) (using Scala)
+\end{itemize}
+\end{block}
+
+\end{frame}
+
+\section{MVC + Functional}
+\begin{frame}[fragile]{Model}
+
+\begin{block}{Domain Data}
+\begin{itemize}
+  \item Immutable data structures, operations can be described in a separated module
+  \item We can enhance ADT with type classes
+\end{itemize}
+\end{block}
+
+\begin{lstlisting}[language=scala]
+sealed trait TicTacToe {
+  def board: Map[Position, Player]
+}
+object TicTacToe {
+  val defaultSize: Int = 3
+  type Position = (Int, Int) //type aliases improve readability
+  case class InProgress(turn: Player, board: Map[Position, Player]) extends TicTacToe
+  case class End(winner: Player, board: Map[Position, Player]) extends TicTacToe
+  sealed trait Player {
+    def other: Player = ...
+  }
+  case object X extends Player
+  case object O extends Player
+}
+\end{lstlisting}
+
+\end{frame}
+
+\section{MVC + Functional}
+\begin{frame}[fragile]{Model}
+
+\begin{block}{Operations}
+\begin{itemize}
+  \item Behaviour is describe in term of function that evolve a TicTacToe instance
+  \item Other ideas? State monad?
+\end{itemize}
+\end{block}
+
+\begin{lstlisting}[language=scala]
+object TicTacToeOps {
+  def advanceWith(ticTacToe: TicTacToe, hit: Position): TicTacToe = {
+    val updateGame = for {
+      _ <- rightPosition(ticTacToe, hit)
+    } yield updateBoard(ticTacToe, hit)
+    updateGame.getOrElse(ticTacToe)
+  }
+  def rightPosition(
+    ticTacToe: TicTacToe, 
+    position: Position): Option[TicTacToe] = ....
+  def updateBoard(
+    ticTacToe: TicTacToe, 
+    position: Position): TicTacToe = ...
+  ...
+}
+\end{lstlisting}
+
+\end{frame}
+
+\section{MVC + Functional}
+\begin{frame}[fragile]{View}
+
+\begin{block}{Input Output management}
+\begin{itemize}
+  \item IO is something outside of the model
+  \item Boundary wrap something \emph{outside} the control of the domain logic (e.g. GUI, Console, Socket) 
+  \item Boundary, conceptually, can be defined general from a specific model data (and input data)
+  \item There are problems in this solution?
+\end{itemize}
+\end{block}
+
+\begin{lstlisting}[language=scala]
+trait Boundary[-Model, +Input] { //why generic?
+  def init(): Task[Unit] = Task.pure {}
+
+  def input: Observable[Input]
+
+  def consume(model: Model): Task[Unit]
+}
+\end{lstlisting}
+
+\end{frame}
+
+
+\section{MVC + Functional}
+\begin{frame}[fragile]{Controller}
+
+\begin{block}{Application strucutres}
+  \begin{itemize}
+    \item The application flow could be \emph{reactive} and \emph{proactive}
+    \item If it is reactive, the Controller updates the model only when a new input occurs
+    \item If it is proactive, the Controller updates the model indipendently from input flow
+  \end{itemize}
+\end{block}
+
+\begin{block}{Intuition}
+\begin{itemize}
+  \item Controller is a module (object) that exposes two function, reactive and proactive
+  \item Both functions, return a Task (i.e. wrap a computation), abstract over the typology
+\end{itemize}
+\end{block}
+\begin{block}{We can built it Model and View indipendent?}
+\end{block}
+\begin{itemize}
+  \item We need only a function that accept an Input (I) and evolves the Model (M) returning a Task[M] (why?).
+  \item An initial Model
+  \item A boundary used for our application
+\end{itemize}
+\end{frame}
+
+
+\section{MVC + Functional}
+\begin{frame}[fragile]{Controller, Structure}
+\begin{lstlisting}[language=Scala]
+type UpdateFn[Model, Input] = (Model, Long, Seq[Input]) => Task[Model]
+
+object Controller {
+  
+  case class ProactiveConfig(timeTarget: FiniteDuration = 33.millis, bufferSize: Int = 5)
+
+  def reactive[M, I](
+    boundary: Boundary[M, I], 
+    model: M, 
+    updateLogic: UpdateFn[M, I]): Task[Unit] = ....
+
+  def proactive[M, I](
+      boundary: Boundary[M, I],
+      model: M,
+      updateLogic: UpdateFn[M, I],
+      config: ProactiveConfig
+  ): Task[Unit] = ...
+
+}
+\end{lstlisting}
+\end{frame}
+
+
+\section{MVC + Functional}
+\begin{frame}[fragile]{View, Implementation}
+
+\begin{lstlisting}[language=Scala]
+  class View(width: Int = 800, height: Int = 600) extends Boundary[TicTacToe, Hit] {
+    ....
+    override def input: Observable[Hit] = Observable
+      .fromTask(cells)
+      .flatMapIterable(a => a)
+      .map(checkObservable)
+      .merge
+    override def consume(model: TicTacToe): Task[Unit] = {
+      for {
+        frame <- container.asyncBoundary(swingScheduler)
+        panel <- board
+        _ <- io(panel.removeAll())
+        _ <- renderButtons(panel, model.board)
+        _ <- renderVictory(model)
+        _ <- io(frame.repaint()) //force repaint
+        _ <- io(frame.setVisible(true)) //force repaint
+      } yield ()
+    }
+    ...
+  }
+\end{lstlisting}
+\end{frame}
+
+\section{MVC + Functional}
+\begin{frame}[fragile]{Application}
+
+\begin{lstlisting}[language=Scala]
+object TicTacToeSafe extends TaskApp {
+
+  override def run(args: List[String]): Task[ExitCode] = {
+    val view: Boundary[TicTacToe, Hit] = new View()
+    //main logic
+    val gameLogic: UpdateFn[TicTacToe, Hit] = UpdateFn.timeIndependent { 
+      case (world, inputs) => TicTacToeInputProcess(world, inputs)
+    }
+    val loop = Controller.reactive(view, InProgress(X, Map.empty), gameLogic)
+    loop.map(_ => ExitCode.Success)
+  }
+}
+\end{lstlisting}
+\end{frame}
+
+\section{Discussion}
+\begin{frame}[fragile]{Discussion}
+
+\begin{itemize}
+  \item My effort consists in merge MVC concept with monads/functional programming
+  \item You have found some "impurties"? Or some lacks?
+  \item You prefer OOP solution or "Functional" solution? And why?
+\end{itemize}
+
+\begin{block}{Possible lacks (you can try to solve them as exercise :D)}
+\begin{itemize}
+  \item Error handling? 
+  \item Concurrency fine-control? Parallelism?
+  \item Pure "monadic" view (my interface exposes side effects, isn't it?)
+  \item Cleaner Controller (monad transform?)
+  \item Other application domain
+  \item Other GUI supports
+\end{itemize}
+\end{block}
+\end{frame}
+
 
 \begin{frame}[allowframebreaks]{Bibliography}
 \def\bibfont{\footnotesize}
