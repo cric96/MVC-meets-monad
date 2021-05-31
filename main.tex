@@ -3,7 +3,6 @@
 \usecolortheme{myct3}
 \usepackage[orientation=landscape,size=custom,width=16,height=9.75,scale=0.5,debug]{beamerposter}
 \usepackage{multimedia}
-
 \usepackage{tikz}
 \usetikzlibrary{arrows,shapes.geometric,positioning,automata}
 \usetikzlibrary{trees,decorations.pathmorphing,calc}
@@ -90,8 +89,8 @@
   \end{center}
 }
 
-\section{It is all about composition \cite{}}
-\begin{frame}[fragile]{It is all about composition \cite{}}
+\section{It is all about composition \cite{milewski2019category}}
+\begin{frame}[fragile]{It is all about composition \cite{milewski2019category}}
 \begin{itemize}
 \item Humans tend to divide complex problem in multiple pieces
 \item Then, solve each piece
@@ -180,7 +179,7 @@ interface View extends ClickCellSource {
 \begin{frame}[fragile]{View}
 \begin{block}{Desing pattern}
   \begin{itemize}
-    \item Input handler is usally solved with the Observer pattern (or also called Listener). 
+    \item Input handler is usally solved with the Observer \cite{gamma1995design} pattern (or also called Listener). 
     \item When is possible, during the design process, is important to identify patterns and reuse common solution :D
   \end{itemize}
 \end{block}
@@ -247,12 +246,12 @@ public static void main(String[] args) {
 \section{Libraries}
 \begin{frame}[fragile]{Libraries}
 
-\begin{block}{\href{https://typelevel.org/cats/}{Cats}}
-  provides abstractions for functional programming in the Scala programming language
+\begin{block}{\href{https://typelevel.org/cats/}{Cats} \cite{scalacats2017}}
+  provides abstractions for functional programming in the Scala programming language.
 \end{block}
 
 \begin{block}{\href{https://monix.io/}{Monix}}
-  high-performance Scala / Scala.js library for composing asynchronous, event-based programs
+  high-performance Scala / Scala.js library for composing asynchronous, event-based programs.
 \end{block}
 
 \end{frame}
@@ -305,12 +304,44 @@ main.runToFuture(scheduler)
 
 \end{frame}
 
-\section{Conclusion \& Future Work}
+\section{Observable}
+\begin{frame}[fragile]{Observable}
 
-\begin{frame}{Conclusion}
+\begin{block}{Definition}
+A data type for modelling and processing asynchronous and reactive streaming of events with non-blocking back-pressure.
+\end{block}
 
-%\imgh{0.9}{example-image}
-%
+\begin{block}{Functional Reactive Programming}
+  \begin{itemize}
+    \item The program is expressed as a reaction to its inputs, or as a flow of data.
+    \item We can use Observable to implement it
+    \item Out of this talk, If you are interested Conal Elliot (\url{http://conal.net/}) makes a lot of materials about this topic.
+  \end{itemize}
+\end{block}
+
+\end{frame}
+
+\section{Observable}
+\begin{frame}[fragile]{An example with Scala.js :)}
+\begin{lstlisting}[language=Scala]
+val textInput = input(placeholder := "write text here").render
+//unsafe "boundary"
+val subject = PublishSubject[String]() 
+textInput.oninput = _ => subject.onNext(textInput.value)
+val result = p.render
+Fiddle.print(div(textInput), result)
+//safe part
+val inputStream = subject.share //API of the model
+val computation = for {
+  text <- inputStream
+  _ <- Observable.pure(result.innerText = text)
+} yield()
+
+computation.foreachL(a => a).runToFuture
+\end{lstlisting}  
+\begin{center}
+  \href{https://scalafiddle.io/sf/0uDr1Cr/1}{Fiddle}
+\end{center}
 
 \end{frame}
 
