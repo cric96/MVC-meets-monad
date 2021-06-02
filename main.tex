@@ -348,7 +348,7 @@ computation.foreachL(a => a).runToFuture
 \begin{itemize}
   \item Model is described using Algebraic Data Type and operations (in a separated module)
   \item View is modelled using monadic abstraction to wrap side effects
-  \item Controller coordinates model and view without introducing other side effects and using a monadic manipulation (e.g. via flatmap)
+  \item Controller coordinates Model and View without introducing other side effects and using a monadic manipulation (e.g. via flatmap)
 \end{itemize}
 
 
@@ -460,7 +460,7 @@ trait Boundary[-Model, +Input] { //why generic?
 \begin{block}{Intuition}
 \begin{itemize}
   \item Controller is a module (object) that exposes two function, i.e. reactive and proactive
-  \item Both functions, return a Task (i.e. wrap a computation), abstracting over the typology
+  \item Both functions, return a Task (i.e. wrap a computation)
 \end{itemize}
 \end{block}
 \begin{block}{Can we build it independently from Model and View?}
