@@ -9,7 +9,7 @@
 \usetikzlibrary{intersections}
 
 \title[MVC Meets Monad]{MVC meets Monads}
-\subtitle{A Functional-based design for a classic architectural pattern}
+\subtitle{A functional-based design for a classic architectural pattern}
 
 \author[G.Aguzzi]
 {\textbf{Gianluca Aguzzi}}
@@ -92,10 +92,10 @@
 \section{It is all about composition}
 \begin{frame}[fragile]{It is all about composition \cite{milewski2019category}}
 \begin{itemize}
-\item Humans tend to divide complex problem in multiple pieces
+\item Humans tend to divide complex problems in multiple pieces
 \item Then, solve each piece
-\item Finally compose all solution to solve the initial problem
-\item Functional programming is a good way to compose solution :)
+\item Finally compose all solutions to solve the initial problem
+\item Functional programming is a good way to compose different solutions :)
 \end{itemize}
 
 %\imgv{0.3}{collective-comm.png}
@@ -122,8 +122,8 @@
 \begin{frame}[fragile]{OOP Design}
 \begin{block}{Everything is an object}
   \begin{itemize}
-  \item Clean interface
-  \item State incapsulated
+  \item Clear interface
+  \item Incapsulated state
   \item Side effect as methods call
   \end{itemize}
 \end{block}
@@ -157,9 +157,9 @@ interface TicTacToe {
 \begin{frame}[fragile]{View}
 \begin{block}{Representation and IO boundary}
   \begin{itemize}
-    \item Describe what type of data can consume (for rendering porpuse)
-    \item Catch how to handle user input
-    \item Ideally, View could be totaly decoupled from the model
+    \item Describes what type of data it can consume (for rendering porpuse)
+    \item Catches how to handle user's inputs
+    \item Ideally, the View could be totally decoupled from the Model
   \end{itemize}
 \end{block}
 \begin{lstlisting}[language=Java]
@@ -179,8 +179,7 @@ interface View extends ClickCellSource {
 \begin{frame}[fragile]{View}
 \begin{block}{Desing pattern}
   \begin{itemize}
-    \item Input handler is usally solved with the Observer \cite{gamma1995design} pattern (or also called Listener). 
-    \item When is possible, during the design process, is important to identify patterns and reuse common solution :D
+    \item the Input handler is usually solved exploiting the Observer \cite{gamma1995design} pattern (also called Listener). 
   \end{itemize}
 \end{block}
 \begin{lstlisting}[language=Java]
@@ -197,9 +196,9 @@ public interface ClickCellSource {
 \begin{frame}[fragile]{Controller}
 \begin{block}{Goals}
   \begin{itemize}
-    \item Coordinate the interation between the View and Model worlds
-    \item Handle concurrency
-    \item Adapt data 
+    \item Coordinates the interation between View and Model worlds
+    \item Handles concurrency
+    \item Adapts data 
   \end{itemize}
 \end{block}
 
@@ -220,8 +219,8 @@ public class TicTacToeGame implements Game {
 \end{lstlisting}
 \end{frame}
 
-\section{Putting all togheter}
-\begin{frame}[fragile]{Putting all togheter}
+\section{Putting all together}
+\begin{frame}[fragile]{Putting all together}
 
 \begin{lstlisting}[language=Java]
 public static void main(String[] args) {
@@ -231,12 +230,11 @@ public static void main(String[] args) {
   game.start();
 }
 \end{lstlisting}
-\begin{block}{Clean enogh, isn't it?}
+\begin{block}{Clean enough, isn't it?}
   What do you think?
   \begin{itemize}
-    \item What do you think?
-    \item Try to rethink using "functional" abstractions
-    \item (Monads? Functions? Algebric Data Type?)
+    \item Try to rethink the design phase using "functional" abstractions
+    \item (Monads? Functions? Algebraic Data Type?)
     \item Let's go to the "functional" side :)
   \end{itemize}
 \end{block}
@@ -260,7 +258,7 @@ public static void main(String[] args) {
 \begin{frame}[fragile]{Task}
 
 \begin{block}{Definition}
-  Task represents a specification for a possibly lazy or asynchronous computation, which when executed will produce an A as a result, along with possible side-effects.
+  Task represents a specification for a possibly lazy or asynchronous computation, which when executed will produce a data as a result, along with possible side-effects.
 \end{block}
 \begin{lstlisting}[language=Scala]
 trait Task[+A] {
@@ -315,7 +313,7 @@ A data type for modelling and processing asynchronous and reactive streaming of 
   \begin{itemize}
     \item The program is expressed as a reaction to its inputs, or as a flow of data.
     \item We can use Observable to implement it
-    \item Out of this talk, If you are interested Conal Elliot (\url{http://conal.net/}) makes a lot of materials about this topic.
+    \item Out of this talk, if you are interested, Conal Elliot (\url{http://conal.net/}) proposes a lot of materials about this topic.
   \end{itemize}
 \end{block}
 
@@ -348,7 +346,7 @@ computation.foreachL(a => a).runToFuture
 \section{MVC + Functional}
 \begin{frame}[fragile]{MVC + Functional, Intuition}
 \begin{itemize}
-  \item Model is described usign Algebric Data Type and operations (in a separeted module)
+  \item Model is described using Algebraic Data Type and operations (in a separated module)
   \item View is modelled using monadic abstraction to wrap side effects
   \item Controller coordinates model and view without introducing other side effects and using a monadic manipulation (e.g. via flatmap)
 \end{itemize}
@@ -356,8 +354,8 @@ computation.foreachL(a => a).runToFuture
 
 \begin{block}{Applied in our case}
 \begin{itemize}
-  \item Observable describes the input user flow
-  \item All the other computation (lazy and with side effects) are wrapped with Task
+  \item Observable describes the user's inputs flow
+  \item Other computations (e.g. lazy and with side effects) are wrapped with Task
   \item Let's start again :) (using Scala)
 \end{itemize}
 \end{block}
@@ -398,7 +396,7 @@ object TicTacToe {
 
 \begin{block}{Operations}
 \begin{itemize}
-  \item Behaviour is describe in term of function that evolve a TicTacToe instance
+  \item Behaviour is described in terms of a function that evolves into a TicTacToe instance
   \item Other ideas? State monad?
 \end{itemize}
 \end{block}
@@ -426,12 +424,12 @@ object TicTacToeOps {
 \section{MVC + Functional}
 \begin{frame}[fragile]{View}
 
-\begin{block}{Input Output management}
+\begin{block}{Input-Output management}
 \begin{itemize}
   \item IO is something outside of the model
-  \item Boundary wrap something \emph{outside} the control of the domain logic (e.g. GUI, Console, Socket) 
-  \item Boundary, conceptually, can be defined general from a specific model data (and input data)
-  \item There are problems in this solution?
+  \item Boundary wraps something \emph{outside} the control of the domain logic (e.g. GUI, Console, Socket) 
+  \item Boundary, conceptually, can be defined as independent from a specific model data (and input data)
+  \item There are any problems with this solution?
 \end{itemize}
 \end{block}
 
@@ -453,25 +451,26 @@ trait Boundary[-Model, +Input] { //why generic?
 
 \begin{block}{Application strucutres}
   \begin{itemize}
-    \item The application flow could be \emph{reactive} and \emph{proactive}
-    \item If it is reactive, the Controller updates the model only when a new input occurs
-    \item If it is proactive, the Controller updates the model indipendently from input flow
+    \item The application flow could be either \emph{reactive} or \emph{proactive}
+    \item When it is reactive, the Controller updates the Model only when a new input occurs
+    \item When it is proactive, the Controller updates the Model independently from the input flow
   \end{itemize}
 \end{block}
 
 \begin{block}{Intuition}
 \begin{itemize}
-  \item Controller is a module (object) that exposes two function, reactive and proactive
-  \item Both functions, return a Task (i.e. wrap a computation), abstract over the typology
+  \item Controller is a module (object) that exposes two function, i.e. reactive and proactive
+  \item Both functions, return a Task (i.e. wrap a computation), abstracting over the typology
 \end{itemize}
 \end{block}
-\begin{block}{We can built it Model and View indipendent?}
+\begin{block}{Can we build it independently from Model and View?}
+  \begin{itemize}
+    \item We only need a function accepting an Input (I) and evolving the Model (M) returning a Task[M] (why?).
+    \item An initial Model
+    \item A boundary used for our application
+  \end{itemize}
 \end{block}
-\begin{itemize}
-  \item We need only a function that accept an Input (I) and evolves the Model (M) returning a Task[M] (why?).
-  \item An initial Model
-  \item A boundary used for our application
-\end{itemize}
+
 \end{frame}
 
 
@@ -551,9 +550,9 @@ object TicTacToeSafe extends TaskApp {
 \begin{frame}[fragile]{Discussion}
 
 \begin{itemize}
-  \item My effort consists in merge MVC concept with monads/functional programming
-  \item You have found some "impurties"? Or some lacks?
-  \item You prefer OOP solution or "Functional" solution? And why?
+  \item My effort consists in merging MVC concepts with monads/functional programming
+  \item Have you found some "impurities"? Or some lacks?
+  \item Do you prefer the OOP solution or the "Functional" solution? And why?
 \end{itemize}
 
 \begin{block}{Possible lacks (you can try to solve them as exercise :D)}
