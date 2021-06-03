@@ -1,5 +1,6 @@
 \documentclass[presentation]{beamer}
 \usepackage{notes_style_v3}
+\usepackage{fontawesome}
 \usecolortheme{myct3}
 \usepackage[orientation=landscape,size=custom,width=16,height=9.75,scale=0.5,debug]{beamerposter}
 \usepackage{multimedia}
@@ -108,7 +109,7 @@ Deparment of Computer Science and Engineering (DISI)
 \begin{frame}[fragile]{Target application: Tic Tac Toe}
 \imgh{0.4}{tictactoe.png}
 \begin{center}
-  Repository: \url{https://github.com/cric96/scala-functional-gui}
+Repository \hyperlink{https://github.com/cric96/scala-functional-gui}{\faExternalLink}
 \end{center}
 \end{frame}
 %%%%
@@ -281,7 +282,7 @@ val main = for {
 main.runToFuture(scheduler)
 \end{lstlisting}
 \begin{center}
-  \href{https://scalafiddle.io/sf/C4Qon6a/1}{Fiddle}
+Fiddle \hyperlink{https://scalafiddle.io/sf/C4Qon6a/1}{\faExternalLink}
 \end{center}
 \end{frame}
 %%%%
@@ -294,7 +295,7 @@ A data type for modelling and processing asynchronous and reactive streaming of 
 \begin{itemize}
 \item The program is expressed as a reaction to its inputs, or as a flow of data.
 \item We can use Observable to implement it
-\item Out of this talk, if you are interested, Conal Elliot (\url{http://conal.net/}) proposes a lot of materials about this topic.
+\item Out of this talk, if you are interested, Conal Elliot \hyperlink{http://conal.net/}{\faExternalLink} proposes a lot of materials about this topic.
 \end{itemize}
 \end{block}
 \end{frame}
@@ -318,7 +319,7 @@ val computation = for {
 computation.foreachL(a => a).runToFuture
 \end{lstlisting}  
 \begin{center}
-\href{https://scalafiddle.io/sf/0uDr1Cr/1}{Fiddle}
+Fiddle \hyperlink{https://scalafiddle.io/sf/0uDr1Cr/1}{\faExternalLink}
 \end{center}
 \end{frame}
 %%%%
