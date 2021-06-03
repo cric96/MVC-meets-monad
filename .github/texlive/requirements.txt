@@ -1,3 +1,4 @@
 texlive-latex-recommended
 texlive-science
 texlive-bibtex-extra
+texlive-fonts-extra
