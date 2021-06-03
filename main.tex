@@ -109,7 +109,7 @@ Deparment of Computer Science and Engineering (DISI)
 \begin{frame}[fragile]{Target application: Tic Tac Toe}
 \imgh{0.4}{tictactoe.png}
 \begin{center}
-Repository \hyperlink{https://github.com/cric96/scala-functional-gui}{\faExternalLink}
+Repository \href{https://github.com/cric96/scala-functional-gui}{\faExternalLink}
 \end{center}
 \end{frame}
 %%%%
@@ -233,10 +233,10 @@ public static void main(String[] args) {
 %%%%
 \section{Libraries}
 \begin{frame}[fragile]{Libraries}
-\begin{block}{\href{https://typelevel.org/cats/}{Cats} \cite{scalacats2017}}
+\begin{block}{Cats \href{https://typelevel.org/cats/}{\faExternalLink} \cite{scalacats2017}}
   provides abstractions for functional programming in the Scala programming language.
 \end{block}
-\begin{block}{\href{https://monix.io/}{Monix}}
+\begin{block}{Monix \href{https://monix.io/}{\faExternalLink}}
   high-performance Scala / Scala.js library for composing asynchronous, event-based programs.
 \end{block}
 \end{frame}
@@ -264,7 +264,7 @@ object Task {
 \end{frame}
 %%%%
 \section{Task}
-\begin{frame}[fragile]{A Little task}
+\begin{frame}[fragile]{A little taste}
 
 \begin{lstlisting}[language=Scala]
 val scheduler = monix.execution.Scheduler.Implicits.global
@@ -282,7 +282,7 @@ val main = for {
 main.runToFuture(scheduler)
 \end{lstlisting}
 \begin{center}
-Fiddle \hyperlink{https://scalafiddle.io/sf/C4Qon6a/1}{\faExternalLink}
+Fiddle \href{https://scalafiddle.io/sf/C4Qon6a/1}{\faExternalLink}
 \end{center}
 \end{frame}
 %%%%
@@ -295,7 +295,7 @@ A data type for modelling and processing asynchronous and reactive streaming of 
 \begin{itemize}
 \item The program is expressed as a reaction to its inputs, or as a flow of data.
 \item We can use Observable to implement it
-\item Out of this talk, if you are interested, Conal Elliot \hyperlink{http://conal.net/}{\faExternalLink} proposes a lot of materials about this topic.
+\item Out of this talk, if you are interested, Conal Elliot \href{http://conal.net/}{\faExternalLink} proposes a lot of materials about this topic.
 \end{itemize}
 \end{block}
 \end{frame}
@@ -319,7 +319,7 @@ val computation = for {
 computation.foreachL(a => a).runToFuture
 \end{lstlisting}  
 \begin{center}
-Fiddle \hyperlink{https://scalafiddle.io/sf/0uDr1Cr/1}{\faExternalLink}
+Fiddle \href{https://scalafiddle.io/sf/0uDr1Cr/1}{\faExternalLink}
 \end{center}
 \end{frame}
 %%%%
