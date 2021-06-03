@@ -510,11 +510,11 @@ object TicTacToeSafe extends TaskApp {
 \section{Recap}
 \begin{frame}{Recap}
 \begin{itemize}
-\item We clearly isolate side effects in monads (Task, Observable)
-\item Then we can arbitrarily compose them to build an imperative like behaviour
-\item Model are side-effect free
+\item We can clearly isolate side effects using Monads (Task, Observable)
+\item Then we can arbitrarily compose them to build an imperative-like behavior
+\item Model is side-effect free
 \item The program built is referential transparent
-\item Concurrency is handled with monads themself (via shift, Fiber, ...)
+\item Concurrency is handled through Monads themself (via shift, Fiber, ...)
 \end{itemize}
 \begin{block}{Final remark}
 \hsplit{``The IO monad does not make a function pure. It just makes it obvious
