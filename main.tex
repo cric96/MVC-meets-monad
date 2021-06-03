@@ -79,16 +79,14 @@
 \renewcommand{\cite}[1]{{\color{blue}\oldcite{#1}}}
 
 \begin{document}
-
 \frame[label=coverpage,noframenumbering,plain]{
 \titlepage
-
   \begin{center}
   Talk {@}\\
   \textbf{PPS 2021} \\
   \end{center}
 }
-
+%%%%
 \section{It is all about composition}
 \begin{frame}[fragile]{It is all about composition \cite{milewski2019category}}
 \begin{itemize}
@@ -97,9 +95,7 @@
 \item Finally compose all solutions to solve the initial problem
 \item Functional programming is a good way to compose different solutions :)
 \end{itemize}
-
-%\imgv{0.3}{collective-comm.png}
-
+%%%%
 \section{Lecture goals}
 \end{frame}
 \begin{frame}[fragile]{Lecture goals}
@@ -109,7 +105,7 @@
 \item Understand limitations (if any) and the improvements
 \end{itemize}
 \end{frame}
-
+%%%%
 \section{Target application}
 \begin{frame}[fragile]{Target application: Tic Tac Toe}
 \imgh{0.4}{tictactoe.png}
@@ -117,7 +113,7 @@
   Repository: \url{https://github.com/cric96/scala-functional-gui}
 \end{center}
 \end{frame}
-
+%%%%
 \section{OOP Design}
 \begin{frame}[fragile]{OOP Design}
 \begin{block}{Everything is an object}
@@ -127,9 +123,8 @@
   \item Side effect as methods call
   \end{itemize}
 \end{block}
-
 \end{frame}
-
+%%%%
 \section{Model}
 \begin{frame}[fragile]{Model}
 \begin{block}{Core logic}
@@ -152,7 +147,7 @@ interface TicTacToe {
 }
 \end{lstlisting}
 \end{frame}
-
+%%%%
 \section{View}
 \begin{frame}[fragile]{View}
 \begin{block}{Representation and IO boundary}
@@ -163,7 +158,6 @@ interface TicTacToe {
   \end{itemize}
 \end{block}
 \begin{lstlisting}[language=Java]
-
 //a la' view model
 interface ViewBoard {
     List<String> getRow(int row);
@@ -175,7 +169,7 @@ interface View extends ClickCellSource {
 }
 \end{lstlisting}
 \end{frame}
-
+%%%%
 \begin{frame}[fragile]{View}
 \begin{block}{Desing pattern}
   \begin{itemize}
@@ -191,7 +185,7 @@ public interface ClickCellSource {
 }
 \end{lstlisting}
 \end{frame}
-
+%%%%
 \section{Controller}
 \begin{frame}[fragile]{Controller}
 \begin{block}{Goals}
@@ -201,7 +195,6 @@ public interface ClickCellSource {
     \item Adapts data 
   \end{itemize}
 \end{block}
-
 \begin{lstlisting}[language=Java]
 public interface Game extends ClickCellSource.Observer {
   void start();
@@ -218,10 +211,9 @@ public class TicTacToeGame implements Game {
 
 \end{lstlisting}
 \end{frame}
-
+%%%%
 \section{Putting all together}
 \begin{frame}[fragile]{Putting all together}
-
 \begin{lstlisting}[language=Java]
 public static void main(String[] args) {
   final TicTacToeView view = SwingView.createAndShow(800, 600);
@@ -239,24 +231,19 @@ public static void main(String[] args) {
   \end{itemize}
 \end{block}
 \end{frame}
-%%Todo
-
+%%%%
 \section{Libraries}
 \begin{frame}[fragile]{Libraries}
-
 \begin{block}{\href{https://typelevel.org/cats/}{Cats} \cite{scalacats2017}}
   provides abstractions for functional programming in the Scala programming language.
 \end{block}
-
 \begin{block}{\href{https://monix.io/}{Monix}}
   high-performance Scala / Scala.js library for composing asynchronous, event-based programs.
 \end{block}
-
 \end{frame}
-%%Todo
+%%%%
 \section{Task}
 \begin{frame}[fragile]{Task}
-
 \begin{block}{Definition}
   Task represents a specification for a possibly lazy or asynchronous computation, which when executed will produce a data as a result, along with possible side-effects.
 \end{block}
@@ -275,9 +262,8 @@ object Task {
 \begin{center}
   What does it refer you to?
 \end{center}
-
 \end{frame}
-
+%%%%
 \section{Task}
 \begin{frame}[fragile]{A Little task}
 
@@ -299,26 +285,22 @@ main.runToFuture(scheduler)
 \begin{center}
   \href{https://scalafiddle.io/sf/C4Qon6a/1}{Fiddle}
 \end{center}
-
 \end{frame}
-
+%%%%
 \section{Observable}
 \begin{frame}[fragile]{Observable}
-
 \begin{block}{Definition}
 A data type for modelling and processing asynchronous and reactive streaming of events with non-blocking back-pressure.
 \end{block}
-
 \begin{block}{Functional Reactive Programming \cite{wiki:functional} \cite{blackheath2016functional}}
-  \begin{itemize}
-    \item The program is expressed as a reaction to its inputs, or as a flow of data.
-    \item We can use Observable to implement it
-    \item Out of this talk, if you are interested, Conal Elliot (\url{http://conal.net/}) proposes a lot of materials about this topic.
-  \end{itemize}
+\begin{itemize}
+\item The program is expressed as a reaction to its inputs, or as a flow of data.
+\item We can use Observable to implement it
+\item Out of this talk, if you are interested, Conal Elliot (\url{http://conal.net/}) proposes a lot of materials about this topic.
+\end{itemize}
 \end{block}
-
 \end{frame}
-
+%%%%
 \section{Observable}
 \begin{frame}[fragile]{An example with Scala.js :)}
 \begin{lstlisting}[language=Scala]
@@ -338,40 +320,34 @@ val computation = for {
 computation.foreachL(a => a).runToFuture
 \end{lstlisting}  
 \begin{center}
-  \href{https://scalafiddle.io/sf/0uDr1Cr/1}{Fiddle}
+\href{https://scalafiddle.io/sf/0uDr1Cr/1}{Fiddle}
 \end{center}
-
 \end{frame}
-
+%%%%
 \section{MVC + Functional}
 \begin{frame}[fragile]{MVC + Functional, Intuition}
 \begin{itemize}
-  \item Model is described using Algebraic Data Type and operations (in a separated module)
-  \item View is modelled using monadic abstraction to wrap side effects
-  \item Controller coordinates Model and View without introducing other side effects and using a monadic manipulation (e.g. via flatmap)
+\item Model is described using Algebraic Data Type and operations (in a separated module)
+\item View is modelled using monadic abstraction to wrap side effects
+\item Controller coordinates Model and View without introducing other side effects and using a monadic manipulation (e.g. via flatmap)
 \end{itemize}
-
-
 \begin{block}{Applied in our case}
 \begin{itemize}
-  \item Observable describes the user's inputs flow
-  \item Other computations (e.g. lazy and with side effects) are wrapped with Task
-  \item Let's start again :) (using Scala)
+\item Observable describes the user's inputs flow
+\item Other computations (e.g. lazy and with side effects) are wrapped with Task
+\item Let's start again :) (using Scala)
 \end{itemize}
 \end{block}
-
 \end{frame}
-
+%%%%
 \section{MVC + Functional}
 \begin{frame}[fragile]{Model}
-
 \begin{block}{Domain Data}
 \begin{itemize}
-  \item Immutable data structures, operations can be described in a separated module
-  \item We can enhance ADT with type classes
+\item Immutable data structures, operations can be described in a separated module
+\item We can enhance ADT with type classes
 \end{itemize}
 \end{block}
-
 \begin{lstlisting}[language=scala]
 sealed trait TicTacToe {
   def board: Map[Position, Player]
@@ -388,19 +364,16 @@ object TicTacToe {
   case object O extends Player
 }
 \end{lstlisting}
-
 \end{frame}
-
+%%%%
 \section{MVC + Functional}
 \begin{frame}[fragile]{Model}
-
 \begin{block}{Operations}
 \begin{itemize}
-  \item Behaviour is described in terms of a function that evolves into a TicTacToe instance
-  \item Other ideas? State monad?
+\item Behaviour is described in terms of a function that evolves into a TicTacToe instance
+\item Other ideas? State monad?
 \end{itemize}
 \end{block}
-
 \begin{lstlisting}[language=scala]
 object TicTacToeOps {
   def advanceWith(ticTacToe: TicTacToe, hit: Position): TicTacToe = {
@@ -418,21 +391,19 @@ object TicTacToeOps {
   ...
 }
 \end{lstlisting}
-
 \end{frame}
-
+%%%%
 \section{MVC + Functional}
 \begin{frame}[fragile]{View}
-
 \begin{block}{Input-Output management}
 \begin{itemize}
-  \item IO is something outside of the model
-  \item Boundary wraps something \emph{outside} the control of the domain logic (e.g. GUI, Console, Socket) 
-  \item Boundary, conceptually, can be defined as independent from a specific model data (and input data)
-  \item There are any problems with this solution?
+\item IO is something outside of the model
+\item Boundary wraps something \emph{outside} the control of the domain logic (e.g. GUI, Console, Socket) 
+\item Boundary, conceptually, can be defined as independent from a specific model data (and input data)
+\item There are any problems with this solution?
 \end{itemize}
 \end{block}
-
+%%%%
 \begin{lstlisting}[language=scala]
 trait Boundary[-Model, +Input] { //why generic?
   def init(): Task[Unit] = Task.pure {}
@@ -442,38 +413,32 @@ trait Boundary[-Model, +Input] { //why generic?
   def consume(model: Model): Task[Unit]
 }
 \end{lstlisting}
-
 \end{frame}
-
-
+%%%%
 \section{MVC + Functional}
 \begin{frame}[fragile]{Controller}
-
 \begin{block}{Application strucutres}
-  \begin{itemize}
-    \item The application flow could be either \emph{reactive} or \emph{proactive}
-    \item When it is reactive, the Controller updates the Model only when a new input occurs
-    \item When it is proactive, the Controller updates the Model independently from the input flow
-  \end{itemize}
+\begin{itemize}
+\item The application flow could be either \emph{reactive} or \emph{proactive}
+\item When it is reactive, the Controller updates the Model only when a new input occurs
+\item When it is proactive, the Controller updates the Model independently from the input flow
+\end{itemize}
 \end{block}
-
 \begin{block}{Intuition}
 \begin{itemize}
-  \item Controller is a module (object) that exposes two function, i.e. reactive and proactive
-  \item Both functions, return a Task (i.e. wrap a computation)
+\item Controller is a module (object) that exposes two function, i.e. reactive and proactive
+\item Both functions, return a Task (i.e. wrap a computation)
 \end{itemize}
 \end{block}
 \begin{block}{Can we build it independently from Model and View?}
-  \begin{itemize}
-    \item We only need a function accepting an Input (I) and evolving the Model (M) returning a Task[M] (why?).
-    \item An initial Model
-    \item A boundary used for our application
-  \end{itemize}
+\begin{itemize}
+\item We only need a function accepting an Input (I) and evolving the Model (M) returning a Task[M] (why?).
+\item An initial Model
+\item A boundary used for our application
+\end{itemize}
 \end{block}
-
 \end{frame}
-
-
+%%%%
 \section{MVC + Functional}
 \begin{frame}[fragile]{Controller, Structure}
 \begin{lstlisting}[language=Scala]
@@ -498,22 +463,20 @@ object Controller {
 }
 \end{lstlisting}
 \end{frame}
-
-
+%%%%
 \section{MVC + Functional}
 \begin{frame}[fragile]{View, Implementation}
-
 \begin{lstlisting}[language=Scala]
   class View(width: Int = 800, height: Int = 600) extends Boundary[TicTacToe, Hit] {
     ....
-    override def input: Observable[Hit] = Observable
-      .fromTask(cells)
-      .flatMapIterable(a => a)
-      .map(checkObservable)
+    override lazy val input: Observable[Hit] = Observable
+      .fromIterable(cells)
+      .map(liftToObservable)
       .merge
+
     override def consume(model: TicTacToe): Task[Unit] = {
       for {
-        frame <- container.asyncBoundary(swingScheduler)
+        frame <- container.asyncBoundary(swingScheduler) //go to AWT Thread, todo it is a view task or controller task?
         panel <- board
         _ <- io(panel.removeAll())
         _ <- renderButtons(panel, model.board)
@@ -526,13 +489,11 @@ object Controller {
   }
 \end{lstlisting}
 \end{frame}
-
+%%%%
 \section{MVC + Functional}
 \begin{frame}[fragile]{Application}
-
 \begin{lstlisting}[language=Scala]
 object TicTacToeSafe extends TaskApp {
-
   override def run(args: List[String]): Task[ExitCode] = {
     val view: Boundary[TicTacToe, Hit] = new View()
     //main logic
@@ -545,35 +506,52 @@ object TicTacToeSafe extends TaskApp {
 }
 \end{lstlisting}
 \end{frame}
+%%%%
+\section{Recap}
+\begin{frame}{Recap}
+\begin{itemize}
+\item We clearly isolate side effects in monads (Task, Observable)
+\item Then we can arbitrarily compose them to build an imperative like behaviour
+\item Model are side-effect free
+\item The program built is referential transparent
+\item Concurrency is handled with monads themself (via shift, Fiber, ...)
+\end{itemize}
+\begin{block}{Final remark}
+\hsplit{``The IO monad does not make a function pure. It just makes it obvious
+that it’s impure'' 
 
+\emph{Martin Odersky}
+}{
+\imgh{0.5}{pure-impure.png}
+\begin{center}
+\cite{alexander2017functional}
+\end{center}
+}
+
+\end{block}
+\end{frame}
+%%%%
 \section{Discussion}
 \begin{frame}[fragile]{Discussion}
-
 \begin{itemize}
-  \item My effort consists in merging MVC concepts with monads/functional programming
-  \item Have you found some "impurities"? Or some lacks?
-  \item Do you prefer the OOP solution or the "Functional" solution? And why?
+\item My effort consists in merging MVC concepts with monads/functional programming
+\item Have you found some "impurities"? Or some lacks?
+\item Do you prefer the OOP solution or the "Functional" solution? And why?
 \end{itemize}
-
 \begin{block}{Possible lacks (you can try to solve them as exercise :D)}
 \begin{itemize}
-  \item Error handling? 
-  \item Concurrency fine-control? Parallelism?
-  \item Pure "monadic" view (my interface exposes side effects, isn't it?)
-  \item Cleaner Controller (monad transform?)
-  \item Other application domain
-  \item Other GUI supports
+\item Error handling? 
+\item Concurrency fine-control? Parallelism?
+\item Pure "monadic" view (my interface exposes side effects, isn't it?)
+\item Cleaner Controller (monad transform?)
+\item Other application domain
+\item Other GUI supports
 \end{itemize}
 \end{block}
 \end{frame}
-
-
+%%%%
 \begin{frame}[allowframebreaks]{Bibliography}
 \def\bibfont{\footnotesize}
 \printbibliography
 \end{frame}
-
 \end{document}
-
-
-% \sizedrangedcode{\ssmall}{3}{30}{\labdir/code/code_sec1.txt} 
