@@ -267,10 +267,7 @@ object Task {
 \begin{frame}[fragile]{A little taste}
 
 \begin{lstlisting}[language=Scala]
-val scheduler = monix.execution.Scheduler.Implicits.global
-
-def someComputation(data : Long) : Task[Long] = 
-    Task.pure(data * 1000)
+def someComputation(data : Long) : Task[Long] = Task.pure(data * 1000)
 
 def log(value : String) : Task[Unit] = Task { println(value) }
 
@@ -279,7 +276,7 @@ val main = for {
   _ <- log(s"computations ends with value $data")
 } yield (data)
 
-main.runToFuture(scheduler)
+main.runToFuture
 \end{lstlisting}
 \begin{center}
 Fiddle \href{https://scalafiddle.io/sf/C4Qon6a/1}{\faExternalLink}
